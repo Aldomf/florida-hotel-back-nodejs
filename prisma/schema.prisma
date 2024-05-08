@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Define the enum type for availability status
+enum AvailabilityStatus {
+  AVAILABLE
+  OCCUPIED
+}
+
+enum RoomType {
+  SINGLE
+  DOUBLE
+  SUITE
+  // Add more types as needed
+}
+
+//Room model
+model Room {
+  id                Int               @id @default(autoincrement())
+  roomNumber        String
+  roomType          RoomType
+  description       String?
+  pricePerNight     Float
+  capacity          Int
+  roomSize          Float
+  availabilityStatus AvailabilityStatus
+  imageUrls         String[]
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+}
