@@ -20,7 +20,7 @@ export class RoomsController {
   constructor(private readonly roomsService: RoomsService) {}
 
   @Post()
-  @UseInterceptors(FilesInterceptor('image'))
+  @UseInterceptors(FilesInterceptor('images'))
   create(
     @Body() createRoomDto: CreateRoomDto,
     @UploadedFiles() imageFiles: Express.Multer.File[],
@@ -39,7 +39,7 @@ export class RoomsController {
   }
 
   @Patch(':id')
-  @UseInterceptors(FilesInterceptor('image'))
+  @UseInterceptors(FilesInterceptor('images'))
   update(
     @Param('id') id: string,
     @Body() updateRoomDto: UpdateRoomDto,
