@@ -113,52 +113,68 @@ export class RoomsService {
     id: number,
     updateRoomDto: UpdateRoomDto,
     imageFiles: Express.Multer.File[],
-    imageIndexToDelete?: number,
   ): Promise<Room> {
     // Find the room by ID
     const room = await this.prisma.room.findUnique({
       where: { id },
     });
-
+  
     if (!room) {
       throw new NotFoundException(`Room with ID ${id} not found`);
     }
-
+  
     let updatedImageUrls: string[] = room.imageUrls;
-
+  
     // Save the new images to Cloudinary and get their URLs
     if (imageFiles && imageFiles.length > 0) {
       const newImageUrls = await this.saveImages(imageFiles);
       // Concatenate the existing image URLs with the new ones
-      updatedImageUrls = [...room.imageUrls, ...newImageUrls];
+      updatedImageUrls = [...updatedImageUrls, ...newImageUrls];
     }
-
-    // Delete the image at the specified index if provided
+  
+    // Delete the images at the specified indices if provided
     if (
-      typeof imageIndexToDelete === 'number' &&
-      imageIndexToDelete >= 0 &&
-      imageIndexToDelete < room.imageUrls.length
+      updateRoomDto.imageIndicesToDelete &&
+      updateRoomDto.imageIndicesToDelete.length > 0
     ) {
-      const deletedImageUrl = room.imageUrls[imageIndexToDelete];
-      updatedImageUrls.splice(imageIndexToDelete, 1); // Remove the image URL at the specified index
-      await this.deleteImagesFromCloudinary([deletedImageUrl]);
+      const imagesToDelete = updateRoomDto.imageIndicesToDelete.map(
+        (index) => room.imageUrls[index],
+      );
+      console.log(imagesToDelete);
+      // Filter out the image URLs that need to be deleted from the room's imageUrls
+      updatedImageUrls = room.imageUrls.filter(
+        (url) => !imagesToDelete.includes(url),
+      );
+
+      await this.deleteImagesFromCloudinary(imagesToDelete);
     }
 
+    console.log(updatedImageUrls);
+  
+    // Prepare the update data
+    const updateData = {
+      ...updateRoomDto,
+      pricePerNight: parseFloat(updateRoomDto.pricePerNight),
+      capacity: parseInt(updateRoomDto.capacity, 10),
+      roomSize: parseFloat(updateRoomDto.roomSize),
+      imageUrls: updatedImageUrls,
+    };
+  
+    // Remove fields that should not be updated directly in the database
+    delete updateData.imageIndicesToDelete;
+  
     // Update the room properties including image URLs
     const updatedRoom = await this.prisma.room.update({
       where: { id },
-      data: {
-        ...updateRoomDto, // Update with the provided DTO fields
-        pricePerNight: parseFloat(updateRoomDto.pricePerNight),
-        capacity: parseInt(updateRoomDto.capacity, 10),
-        roomSize: parseFloat(updateRoomDto.roomSize),
-        imageUrls: updatedImageUrls,
-        // Update other fields as needed
-      },
+      data: updateData,
     });
-
+  
     return updatedRoom;
   }
+  
+
+  
+  
 
   //delete room
   async remove(id: number): Promise<Room> {

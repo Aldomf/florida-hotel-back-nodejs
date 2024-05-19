@@ -39,20 +39,14 @@ export class RoomsController {
   }
 
   @Patch(':id')
-  @UseInterceptors(FilesInterceptor('images'))
-  update(
-    @Param('id') id: string,
-    @Body() updateRoomDto: UpdateRoomDto,
-    @UploadedFiles() imageFiles: Express.Multer.File[],
-    @Query('imageIndexToDelete') imageIndexToDelete?: string,
-  ) {
-    return this.roomsService.update(
-      +id,
-      updateRoomDto,
-      imageFiles,
-      parseInt(imageIndexToDelete, 10),
-    );
-  }
+@UseInterceptors(FilesInterceptor('images'))
+update(
+  @Param('id') id: string,
+  @Body() updateRoomDto: UpdateRoomDto,
+  @UploadedFiles() imageFiles: Express.Multer.File[],
+) {
+  return this.roomsService.update(+id, updateRoomDto, imageFiles);
+}
 
   @Delete(':id')
   remove(@Param('id') id: string) {
