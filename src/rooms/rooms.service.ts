@@ -123,14 +123,7 @@ export class RoomsService {
       throw new NotFoundException(`Room with ID ${id} not found`);
     }
   
-    let updatedImageUrls: string[] = room.imageUrls;
-  
-    // Save the new images to Cloudinary and get their URLs
-    if (imageFiles && imageFiles.length > 0) {
-      const newImageUrls = await this.saveImages(imageFiles);
-      // Concatenate the existing image URLs with the new ones
-      updatedImageUrls = [...updatedImageUrls, ...newImageUrls];
-    }
+    let updatedImageUrls: string[] = room.imageUrls.slice();
   
     // Delete the images at the specified indices if provided
     if (
@@ -142,13 +135,20 @@ export class RoomsService {
       );
       console.log(imagesToDelete);
       // Filter out the image URLs that need to be deleted from the room's imageUrls
-      updatedImageUrls = room.imageUrls.filter(
+      updatedImageUrls = updatedImageUrls.filter(
         (url) => !imagesToDelete.includes(url),
       );
-
+  
       await this.deleteImagesFromCloudinary(imagesToDelete);
     }
-
+  
+    // Save the new images to Cloudinary and get their URLs
+    if (imageFiles && imageFiles.length > 0) {
+      const newImageUrls = await this.saveImages(imageFiles);
+      // Concatenate the remaining image URLs with the new ones
+      updatedImageUrls = [...updatedImageUrls, ...newImageUrls];
+    }
+  
     console.log(updatedImageUrls);
   
     // Prepare the update data
@@ -170,7 +170,7 @@ export class RoomsService {
     });
   
     return updatedRoom;
-  }
+  }  
   
 
   
