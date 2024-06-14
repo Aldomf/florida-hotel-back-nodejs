@@ -1,6 +1,16 @@
+import { IsEmail, IsNotEmpty, IsDateString } from 'class-validator';
+
 export class CreateBookingDto {
-    name: string;
-    email: string;
-    startDate: Date;
-    endDate: Date;
-  }
+  @IsNotEmpty()
+  name: string;
+
+  @IsEmail()
+  email: string;
+
+  @IsDateString()
+  startDate: string;
+
+  @IsDateString()
+  endDate: string;
+}
+

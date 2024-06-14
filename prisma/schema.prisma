@@ -28,24 +28,25 @@ enum RoomType {
 
 //Room model
 model Room {
-  id                Int               @id @default(autoincrement())
-  roomNumber        String
-  roomType          RoomType
-  description       String?
-  pricePerNight     Float
-  capacity          Int
-  roomSize          Float
+  id                 Int                @id @default(autoincrement())
+  roomNumber         String
+  roomType           RoomType
+  description        String?
+  pricePerNight      Float
+  capacity           Int
+  roomSize           Float
   availabilityStatus AvailabilityStatus
-  imageUrls         String[]
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
+  imageUrls          String[]
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
 }
 
 model Booking {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String
-  startDate DateTime
-  endDate   DateTime
-  createdAt DateTime @default(now())
+  id            Int      @id @default(autoincrement())
+  bookingNumber String   @unique
+  name          String
+  email         String
+  startDate     DateTime
+  endDate       DateTime
+  createdAt     DateTime @default(now())
 }
