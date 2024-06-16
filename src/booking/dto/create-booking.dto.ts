@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsDateString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsDateString, IsInt, IsPositive } from 'class-validator';
 
 export class CreateBookingDto {
   @IsNotEmpty()
@@ -12,5 +12,11 @@ export class CreateBookingDto {
 
   @IsDateString()
   endDate: string;
-}
 
+  @IsInt()
+  @IsPositive()
+  nights: number;
+
+  @IsPositive()
+  price: number;
+}
