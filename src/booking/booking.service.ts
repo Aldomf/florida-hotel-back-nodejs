@@ -20,6 +20,7 @@ export class BookingService {
     });
   }
 
+  
   async findAll() {
     return this.prisma.booking.findMany();
   }
