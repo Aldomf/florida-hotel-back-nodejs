@@ -1,22 +1,22 @@
 import { IsEmail, IsNotEmpty, IsDateString, IsInt, IsPositive } from 'class-validator';
 
 export class CreateBookingDto {
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Please provide a name' })
   name: string;
 
-  @IsEmail()
+  @IsEmail({}, { message: 'Please provide a valid email address' })
   email: string;
 
-  @IsDateString()
+  @IsDateString({}, { message: 'Please provide a start date' })
   startDate: string;
 
-  @IsDateString()
+  @IsDateString({}, { message: 'Please provide a end date' })
   endDate: string;
 
   @IsInt()
-  @IsPositive()
+  @IsPositive({ message: 'Please provide a start date' })
   nights: number;
 
-  @IsPositive()
+  @IsPositive({ message: 'Please provide a end date' })
   price: number;
 }
