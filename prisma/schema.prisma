@@ -39,6 +39,7 @@ model Room {
   imageUrls          String[]
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
+  bookings           Booking[]          @relation("RoomBookings")
 }
 
 model Booking {
@@ -51,5 +52,7 @@ model Booking {
   nights        Int
   price         Float
   createdAt     DateTime @default(now())
+  roomId        Int
+  room          Room     @relation("RoomBookings", fields: [roomId], references: [id])
 }
 

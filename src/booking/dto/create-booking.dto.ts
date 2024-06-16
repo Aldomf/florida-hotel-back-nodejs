@@ -19,4 +19,8 @@ export class CreateBookingDto {
 
   @IsPositive({ message: 'Please provide a end date' })
   price: number;
+
+  @IsInt()
+  @IsPositive({ message: 'Please provide a valid room ID' })
+  roomId: number;
 }

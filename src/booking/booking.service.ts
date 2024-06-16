@@ -1,4 +1,3 @@
-// booking.service.ts
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
@@ -11,15 +10,21 @@ export class BookingService {
   async create(createBookingDto: CreateBookingDto) {
     // Generate a unique booking number
     const bookingNumber = uuidv4();
-
+  
+    const { roomId, ...bookingData } = createBookingDto;
+  
     return this.prisma.booking.create({
       data: {
-        ...createBookingDto,
+        ...bookingData,
         bookingNumber,
+        room: {
+          connect: {
+            id: roomId, // Connects the booking to the room with the specified ID
+          },
+        },
       },
     });
   }
-
   
   async findAll() {
     return this.prisma.booking.findMany();
