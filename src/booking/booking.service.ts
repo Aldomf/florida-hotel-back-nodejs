@@ -33,6 +33,7 @@ export class BookingService {
   async findOne(id: number) {
     return this.prisma.booking.findUnique({
       where: { id },
+      include: { room: true },
     });
   }
 }
