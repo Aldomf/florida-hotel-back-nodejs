@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Post } from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 
@@ -19,5 +19,16 @@ export class BookingController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.bookingService.findOne(+id);
+  }
+
+  @Post('find')
+  async findBookingNumber(@Body('bookingNumber') bookingNumber: string) {
+    const booking = await this.bookingService.findBookingNumber(bookingNumber);
+
+    if (!booking) {
+      throw new NotFoundException('Booking not found');
+    }
+
+    return booking;
   }
 }
