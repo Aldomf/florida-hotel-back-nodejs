@@ -49,13 +49,23 @@ export class StripeService {
         bookingId,
       },
       mode: 'payment',
-      success_url: `${process.env.FRONTEND_URL}/my-reservations?bookingId=${bookingId}`,
+      success_url: `${process.env.FRONTEND_URL}/my-reservations?bookingId=${bookingId}&status=success`,
       cancel_url: `${process.env.FRONTEND_URL}/booking-cancelled`,
       client_reference_id: bookingId.toString(),
     });
 
     return session;
   }
+
+  async handlePaymentSuccess(bookingId: string) {
+    const id = parseInt(bookingId, 10);
+    if (isNaN(id)) {
+      throw new Error('Invalid booking ID');
+    }
+  
+    await this.bookingService.updatePaymentStatus(id, 'paid');
+  }
+  
 
   async createPaymentIntent(
     bookingId: number,

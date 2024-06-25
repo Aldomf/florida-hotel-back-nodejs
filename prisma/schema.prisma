@@ -51,6 +51,7 @@ model Booking {
   endDate       DateTime
   nights        Int
   price         Float
+  paymentStatus String   @default("pending")
   createdAt     DateTime @default(now())
   roomId        Int
   room          Room     @relation("RoomBookings", fields: [roomId], references: [id])

@@ -16,6 +16,7 @@ export class BookingService {
       data: {
         ...bookingData,
         bookingNumber,
+        paymentStatus: 'pending',
         room: {
           connect: {
             id: roomId, // Connects the booking to the room with the specified ID
@@ -35,6 +36,18 @@ export class BookingService {
       include: { room: true },
     });
   }
+
+  async updatePaymentStatus(id: number, status: string) {
+    return this.prisma.booking.update({
+      where: {
+        id: id, // Ensure id is a number
+      },
+      data: {
+        paymentStatus: status, // Set the payment status to the provided status
+      },
+    });
+  }
+  
 
   async findBookingNumber(bookingNumber: string) {
     return this.prisma.booking.findUnique({
