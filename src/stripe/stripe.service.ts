@@ -50,7 +50,7 @@ export class StripeService {
       },
       mode: 'payment',
       success_url: `${process.env.FRONTEND_URL}/my-reservations?bookingId=${bookingId}&status=success`,
-      cancel_url: `${process.env.FRONTEND_URL}/booking-cancelled`,
+      cancel_url: `${process.env.FRONTEND_URL}/my-reservations?bookingId=${bookingId}&status=cancel`,
       client_reference_id: bookingId.toString(),
     });
 
