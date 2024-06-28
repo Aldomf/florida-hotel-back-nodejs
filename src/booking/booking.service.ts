@@ -37,6 +37,12 @@ export class BookingService {
     });
   }
 
+  async delete(id: number) {
+    return this.prisma.booking.delete({
+      where: { id },
+    });
+  }
+
   async updatePaymentStatus(id: number, status: string) {
     return this.prisma.booking.update({
       where: {

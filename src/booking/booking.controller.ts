@@ -1,4 +1,4 @@
-import { Body, Controller, Get, NotFoundException, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post } from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 
@@ -30,5 +30,14 @@ export class BookingController {
     }
 
     return booking;
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: string) {
+    const booking = await this.bookingService.findOne(+id);
+    if (!booking) {
+      throw new NotFoundException('Booking not found');
+    }
+    return this.bookingService.delete(+id);
   }
 }
